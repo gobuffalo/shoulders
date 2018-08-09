@@ -1,0 +1,8 @@
+# github.com/markbates/deplist v1.0.1
+github.com/markbates/deplist
+# github.com/pkg/errors v0.8.0
+github.com/pkg/errors
+# golang.org/x/net v0.0.0-20180808004115-f9ce57c11b24
+golang.org/x/net/context
+# golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f
+golang.org/x/sync/errgroup
