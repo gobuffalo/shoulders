@@ -75,16 +75,23 @@ func (l *lister) process(path string, info os.FileInfo) error {
 
 func (l *lister) find(name string, dir string) error {
 	ctx := build.Default
-	pkg, err := ctx.Import(name, dir, build.IgnoreVendor)
+
+	pkg, err := ctx.Import(name, dir, 0)
+
+	if err != nil {
+		if !strings.Contains(err.Error(), "cannot find package") {
+			if _, ok := errors.Cause(err).(*build.NoGoError); !ok {
+				return errors.WithStack(err)
+			}
+		}
+	}
+
 	if pkg.Goroot {
 		return nil
 	}
-	if err != nil {
-		if _, ok := errors.Cause(err).(*build.NoGoError); !ok {
-			return errors.WithStack(err)
-		}
-	}
-	for _, imp := range pkg.Imports {
+
+	imps := append(pkg.Imports, pkg.TestImports...)
+	for _, imp := range imps {
 		if l.seen[imp] {
 			continue
 		}
