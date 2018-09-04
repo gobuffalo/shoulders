@@ -1,8 +1,8 @@
-github.com/markbates/deplist v1.0.1 h1:2Yhph8Rd6BjKAfLi+R6OBleat94aK3EEL7+yOYcDFKY=
-github.com/markbates/deplist v1.0.1/go.mod h1:ZerU6FuDYMFbdh+BdCNmce+SexbmOZd/ftnrcxVyNXQ=
-github.com/markbates/deplist v1.0.2 h1:91fPoNtVdkSJa/F0Zv/5+CzcZ9OnCzbWYUmFpCKe3X8=
-github.com/markbates/deplist v1.0.2/go.mod h1:ZerU6FuDYMFbdh+BdCNmce+SexbmOZd/ftnrcxVyNXQ=
+github.com/markbates/deplist v1.0.3 h1:rhStDS7mpqnZyoSuEmE+wHtpeGuDNhSrIiYcux8RuVs=
+github.com/markbates/deplist v1.0.3/go.mod h1:CNJf81LPh/KJNv/URRusYYPFJDrsKUniUzUK/F4b7G4=
+github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
-golang.org/x/net v0.0.0-20180808004115-f9ce57c11b24 h1:mEsFm194MmS9vCwxFy+zwu0EU7ZkxxMD1iH++vmGdUY=
-golang.org/x/net v0.0.0-20180808004115-f9ce57c11b24/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
+golang.org/x/net v0.0.0-20180826012351-8a410e7b638d h1:g9qWBGx4puODJTMVyoPrpoxPFgVGd+z1DZwjfRu4d0I=
+golang.org/x/net v0.0.0-20180826012351-8a410e7b638d/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
+golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f h1:wMNYb4v58l5UBM7MYRLPG6ZhfOqbKu7X5eyFl8ZhKvA=
 golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
