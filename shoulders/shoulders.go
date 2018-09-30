@@ -1,12 +1,12 @@
 package shoulders
 
 import (
+	"go/build"
 	"html/template"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/markbates/deplist"
@@ -58,22 +58,11 @@ func CurrentPkg() (string, error) {
 }
 
 func DepList() ([]string, error) {
-	giants, err := deplist.List()
-	deps := make([]string, 0, len(giants))
+	pwd, err := os.Getwd()
 	if err != nil {
-		return deps, err
+		return []string{}, err
 	}
-	pkg, err := CurrentPkg()
-	if err != nil {
-		return deps, err
-	}
-	for k := range giants {
-		if !strings.HasPrefix(k, pkg) {
-			deps = append(deps, k)
-		}
-	}
-	sort.Strings(deps)
-	return deps, nil
+	return deplist.FindImports(pwd, build.IgnoreVendor)
 }
 
 var shouldersTemplate = `

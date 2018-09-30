@@ -6,20 +6,20 @@ builds:
     - windows
   env:
     - CGO_ENABLED=0
+  main: ./main.go
 
 checksum:
   name_template: 'checksums.txt'
 
 snapshot:
-name_template: "{{ .Tag }}-next"
+  name_template: "{{ .Tag }}-next"
 
 changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
-
+      - '^docs:'
+      - '^test:'
 <%= if (brew) { %>
 brew:
   github:

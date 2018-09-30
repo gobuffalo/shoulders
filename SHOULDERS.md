@@ -5,10 +5,12 @@
 Thank you to the following **GIANTS**:
 
 
+* [github.com/gobuffalo/shoulders](https://godoc.org/github.com/gobuffalo/shoulders)
+
+* [github.com/gobuffalo/shoulders/shoulders](https://godoc.org/github.com/gobuffalo/shoulders/shoulders)
+
 * [github.com/markbates/deplist](https://godoc.org/github.com/markbates/deplist)
 
+* [github.com/markbates/oncer](https://godoc.org/github.com/markbates/oncer)
+
 * [github.com/pkg/errors](https://godoc.org/github.com/pkg/errors)
-
-* [golang.org/x/net/context](https://godoc.org/golang.org/x/net/context)
-
-* [golang.org/x/sync/errgroup](https://godoc.org/golang.org/x/sync/errgroup)
