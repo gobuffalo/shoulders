@@ -29,6 +29,9 @@ matrix:
     env:
       - GO111MODULE=on
 
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install make ; fi
+
 install: make deps
 
 script: make ci-test
