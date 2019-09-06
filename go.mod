@@ -1,5 +1,5 @@
 module github.com/gobuffalo/shoulders
 
-go 1.12
+go 1.13
 
-require github.com/markbates/deplist v1.2.0
+require golang.org/x/tools v0.0.0-20190906203814-12febf440ab1
