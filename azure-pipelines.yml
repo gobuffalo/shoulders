@@ -10,17 +10,17 @@ jobs:
     vmImage: "vs2017-win2016"
   strategy:
     matrix:
-      go 1.11 (on):
-        go_version: "1.11.13"
-        GO111MODULE: "on"
-      go 1.11 (off):
-        go_version: "1.11.13"
-        GO111MODULE: "off"
       go 1.12 (on):
         go_version: "1.12.9"
         GO111MODULE: "on"
       go 1.12 (off):
         go_version: "1.12.9"
+        GO111MODULE: "off"
+      go 1.13 (on):
+        go_version: "1.13"
+        GO111MODULE: "on"
+      go 1.13 (off):
+        go_version: "1.13"
         GO111MODULE: "off"
   steps:
     - template: azure-tests.yml
@@ -30,17 +30,17 @@ jobs:
     vmImage: "macOS-10.13"
   strategy:
     matrix:
-      go 1.11 (on):
-        go_version: "1.11.13"
-        GO111MODULE: "on"
-      go 1.11 (off):
-        go_version: "1.11.13"
-        GO111MODULE: "off"
       go 1.12 (on):
         go_version: "1.12.9"
         GO111MODULE: "on"
       go 1.12 (off):
         go_version: "1.12.9"
+        GO111MODULE: "off"
+      go 1.13 (on):
+        go_version: "1.13"
+        GO111MODULE: "on"
+      go 1.13 (off):
+        go_version: "1.13"
         GO111MODULE: "off"
   steps:
     - template: azure-tests.yml
@@ -50,17 +50,17 @@ jobs:
     vmImage: "ubuntu-16.04"
   strategy:
     matrix:
-      go 1.11 (on):
-        go_version: "1.11.13"
-        GO111MODULE: "on"
-      go 1.11 (off):
-        go_version: "1.11.13"
-        GO111MODULE: "off"
       go 1.12 (on):
         go_version: "1.12.9"
         GO111MODULE: "on"
       go 1.12 (off):
         go_version: "1.12.9"
+        GO111MODULE: "off"
+      go 1.13 (on):
+        go_version: "1.13"
+        GO111MODULE: "on"
+      go 1.13 (off):
+        go_version: "1.13"
         GO111MODULE: "off"
   steps:
     - template: azure-tests.yml
