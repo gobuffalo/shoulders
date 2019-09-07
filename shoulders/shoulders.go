@@ -1,68 +1,156 @@
 package shoulders
 
 import (
-	"go/build"
+	"bufio"
+	"bytes"
+	"fmt"
 	"html/template"
 	"io"
-	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
+	"sync"
 
-	"github.com/markbates/deplist"
+	"golang.org/x/tools/go/packages"
 )
 
 type View struct {
-	Name string
-	Deps []string
+	Name       string
+	depsOnce   sync.Once
+	deps       []string
+	currentPkg string
+	pkgOnce    sync.Once
 }
 
-func New() (View, error) {
-	var v View
-	pkg, err := CurrentPkg()
+func New() (*View, error) {
+	v := &View{}
+
+	n, err := v.CurrentPkg()
 	if err != nil {
-		return v, err
+		return nil, err
 	}
-	v.Name = pkg
-
-	deps, err := DepList()
-	v.Deps = deps
-	return v, err
+	v.Name = n
+	return v, nil
 }
 
-func (v View) Write(w io.Writer) error {
+func (v *View) Write(w io.Writer) error {
 	t := template.New("SHOULDERS.md")
 	t, err := t.Parse(strings.TrimSpace(shouldersTemplate))
 	if err != nil {
 		return err
 	}
-	return t.Execute(w, v)
+
+	data := struct {
+		*View
+		Deps []string
+	}{
+		View: v,
+	}
+
+	deps, err := v.DepList()
+	if err != nil {
+		return err
+	}
+	data.Deps = deps
+	return t.Execute(w, data)
 }
 
 func CurrentPkg() (string, error) {
-	pwd, err := os.Getwd()
+	v, err := New()
 	if err != nil {
 		return "", err
 	}
+	return v.CurrentPkg()
+}
 
-	cmd := exec.Command("go", "env", "GOPATH")
-	b, err := cmd.CombinedOutput()
+func (v *View) CurrentPkg() (string, error) {
+	var err error
+	(&v.pkgOnce).Do(func() {
+		cfg := &packages.Config{}
+		pkgs, err := packages.Load(cfg, ".")
+		if err != nil {
+			err = err
+			return
+		}
+		if packages.PrintErrors(pkgs) > 0 {
+			err = fmt.Errorf("many, many errors")
+			return
+		}
+
+		if len(pkgs) >= 1 {
+			v.currentPkg = pkgs[0].ID
+		}
+		err = fmt.Errorf("could not determine current package")
+	})
+	return v.currentPkg, err
+}
+
+func (v *View) DepList() ([]string, error) {
+	var err error
+	(&v.depsOnce).Do(func() {
+		c := exec.Command("go", "env", "GOMOD")
+		b, err := c.CombinedOutput()
+		if err != nil {
+			err = err
+			return
+		}
+		b = bytes.TrimSpace(b)
+		if len(b) == 0 {
+			v.deps, err = v.execList("go", "list", "-f", "{{if not .Standard}}{{.ImportPath}}{{end}}", "-deps")
+			return
+		}
+		v.deps, err = v.execList("go", "list", "-m", "-f", "{{.Path}}", "all")
+	})
+	return v.deps, err
+}
+
+func (v *View) execList(name string, args ...string) ([]string, error) {
+	pkg, err := v.CurrentPkg()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	gp := filepath.Join(strings.TrimSpace(string(b)), "src") + string(filepath.Separator)
-	pkg := strings.TrimPrefix(pwd, gp)
-	pkg = filepath.ToSlash(pkg)
 
-	return pkg, nil
+	c := exec.Command(name, args...)
+	r, err := c.StdoutPipe()
+	if err != nil {
+		return nil, err
+	}
+	defer r.Close()
+
+	wg := &sync.WaitGroup{}
+	var list []string
+	go func() {
+		wg.Add(1)
+		defer wg.Done()
+		scan := bufio.NewScanner(r)
+		for scan.Scan() {
+			l := strings.TrimSpace(scan.Text())
+			if len(l) == 0 {
+				continue
+			}
+			if strings.Contains(l, "/internal/") {
+				continue
+			}
+			if strings.HasPrefix(l, pkg) {
+				continue
+			}
+			list = append(list, l)
+		}
+	}()
+
+	if err := c.Run(); err != nil {
+		return nil, err
+	}
+
+	wg.Wait()
+	return list, nil
 }
 
 func DepList() ([]string, error) {
-	pwd, err := os.Getwd()
+	v, err := New()
 	if err != nil {
-		return []string{}, err
+		return nil, err
 	}
-	return deplist.FindImports(pwd, build.IgnoreVendor)
+	return v.DepList()
 }
 
 var shouldersTemplate = `

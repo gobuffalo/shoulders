@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/gobuffalo/shoulders/shoulders"
 )
@@ -18,25 +18,31 @@ var flags = struct {
 }{}
 
 func init() {
-	pkg, err := shoulders.CurrentPkg()
-	if err != nil {
-		log.Fatal(err)
-	}
-	flag.StringVar(&flags.Name, "n", fmt.Sprintf("`%s`", pkg), "name of the project")
+	flag.StringVar(&flags.Name, "n", "", "name of the project")
 	flag.BoolVar(&flags.Write, "w", false, "write SHOULDERS.md to disk")
 	flag.BoolVar(&flags.JSON, "j", false, "print JSON of format of the dep list")
 	flag.Parse()
 }
 
 func main() {
+	flag.Parse()
+
 	view, err := shoulders.New()
 	if err != nil {
 		log.Fatal(err)
 	}
-	view.Name = flags.Name
+
+	flags.Name = strings.TrimSpace(flags.Name)
+	if len(flags.Name) > 0 {
+		view.Name = flags.Name
+	}
 
 	if flags.JSON {
-		if err := json.NewEncoder(os.Stdout).Encode(view.Deps); err != nil {
+		deps, err := view.DepList()
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err := json.NewEncoder(os.Stdout).Encode(deps); err != nil {
 			log.Fatal(err)
 		}
 		return
