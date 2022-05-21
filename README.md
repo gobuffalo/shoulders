@@ -4,7 +4,7 @@ Inspired by the [SHOULDERS.md](https://github.com/gobuffalo/buffalo/blob/master/
 
 ## Installation
 
-```bash
+```console
 $ go install github.com/gobuffalo/shoulders@latest
 ```
 
@@ -12,7 +12,7 @@ $ go install github.com/gobuffalo/shoulders@latest
 
 When run without any flags the `shoulders` command will print the `SHOULDERS.md` to the `STDOUT`.
 
-```bash
+```console
 $ shoulders
 # github.com/gobuffalo/shoulders Stands on the Shoulders of Giants
 
@@ -35,7 +35,7 @@ Thank you to the following **GIANTS**:
 
 To write the `SHOULDERS.md` file to disk use the `-w` flag.
 
-```bash
+```console
 $ shoulders -w
 ```
 
@@ -43,7 +43,7 @@ $ shoulders -w
 
 By default the "name" of the project is the current package name. To change that use the `-n` flag.
 
-```bash
+```console
 $ shoulders -n shoulders
 # shoulders Stands on the Shoulders of Giants
 
@@ -56,7 +56,7 @@ shoulder does not try to reinvent the wheel! Instead, it uses the already great 
 
 To get a JSON array of the dependencies of the project use the `-j` flag.
 
-```bash
+```console
 $ shoulders -j
 ["github.com/yuin/goldmark","golang.org/x/crypto","golang.org/x/mod","golang.org/x/net","golang.org/x/sync","golang.org/x/sys","golang.org/x/text","golang.org/x/tools","golang.org/x/xerrors"]
 ```
