@@ -16,9 +16,11 @@ import (
 type View struct {
 	Name       string
 	depsOnce   sync.Once
+	depsErr    error
 	deps       []string
 	currentPkg string
 	pkgOnce    sync.Once
+	pkgErr     error
 }
 
 func New() (*View, error) {
@@ -63,44 +65,43 @@ func CurrentPkg() (string, error) {
 }
 
 func (v *View) CurrentPkg() (string, error) {
-	var err error
 	(&v.pkgOnce).Do(func() {
 		cfg := &packages.Config{}
 		pkgs, err := packages.Load(cfg, ".")
 		if err != nil {
-			err = err
+			v.pkgErr = err
 			return
 		}
 		if packages.PrintErrors(pkgs) > 0 {
-			err = fmt.Errorf("many, many errors")
+			v.pkgErr = fmt.Errorf("many, many errors")
 			return
 		}
 
 		if len(pkgs) >= 1 {
 			v.currentPkg = pkgs[0].ID
+		} else {
+			v.pkgErr = fmt.Errorf("could not determine current package")
 		}
-		err = fmt.Errorf("could not determine current package")
 	})
-	return v.currentPkg, err
+	return v.currentPkg, v.pkgErr
 }
 
 func (v *View) DepList() ([]string, error) {
-	var err error
 	(&v.depsOnce).Do(func() {
 		c := exec.Command("go", "env", "GOMOD")
 		b, err := c.CombinedOutput()
 		if err != nil {
-			err = err
+			v.depsErr = err
 			return
 		}
 		b = bytes.TrimSpace(b)
 		if len(b) == 0 {
-			v.deps, err = v.execList("go", "list", "-f", "{{if not .Standard}}{{.ImportPath}}{{end}}", "-deps")
+			v.deps, v.depsErr = v.execList("go", "list", "-f", "{{if not .Standard}}{{.ImportPath}}{{end}}", "-deps")
 			return
 		}
-		v.deps, err = v.execList("go", "list", "-m", "-f", "{{.Path}}", "all")
+		v.deps, v.depsErr = v.execList("go", "list", "-m", "-f", "{{.Path}}", "all")
 	})
-	return v.deps, err
+	return v.deps, v.depsErr
 }
 
 func (v *View) execList(name string, args ...string) ([]string, error) {
@@ -118,8 +119,8 @@ func (v *View) execList(name string, args ...string) ([]string, error) {
 
 	wg := &sync.WaitGroup{}
 	var list []string
+	wg.Add(1)
 	go func() {
-		wg.Add(1)
 		defer wg.Done()
 		scan := bufio.NewScanner(r)
 		for scan.Scan() {
@@ -160,7 +161,6 @@ var shouldersTemplate = `
 
 Thank you to the following **GIANTS**:
 
-{{ range $v := .Deps}}
-* [{{$v}}](https://godoc.org/{{$v}})
+{{ range $v := .Deps}}* [{{$v}}](https://godoc.org/{{$v}})
 {{ end }}
 `
