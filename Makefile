@@ -1,61 +1,23 @@
 TAGS ?= ""
-GO_BIN ?= "go"
+GO_BIN ?= go
 
-install: 
-	$(GO_BIN) install -tags ${TAGS} -v ./.
-	make tidy
-
-tidy:
-ifeq ($(GO111MODULE),on)
-	$(GO_BIN) mod tidy
-else
-	echo skipping go mod tidy
-endif
-
-deps:
-	$(GO_BIN) get -tags ${TAGS} -t ./...
-	make tidy
+install:
+	$(GO_BIN) install -tags ${TAGS} -v ./...
 
 build: 
-	$(GO_BIN) build -v .
-	make tidy
+	$(GO_BIN) build -v -o shoulders.bin .
 
 test: 
-	$(GO_BIN) test -cover -tags ${TAGS} ./...
-	make tidy
-
-ci-deps: 
-	$(GO_BIN) get -tags ${TAGS} -t ./...
-
-ci-test: 
-	$(GO_BIN) test -tags ${TAGS} -race ./...
+	$(GO_BIN) test -race -cover -tags ${TAGS} ./...
 
 lint:
-	go get github.com/golangci/golangci-lint/cmd/golangci-lint
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	golangci-lint run --enable-all
-	make tidy
 
 update:
-ifeq ($(GO111MODULE),on)
-	rm go.*
-	$(GO_BIN) mod init
+	-rm go.*
+	$(GO_BIN) mod init github.com/gobuffalo/shoulders
 	$(GO_BIN) mod tidy
-else
-	$(GO_BIN) get -u -tags ${TAGS}
-endif
 	make test
 	make install
-	make tidy
-
-release-test: 
-	$(GO_BIN) test -tags ${TAGS} -race ./...
-	make tidy
-
-release:
-	$(GO_BIN) get github.com/gobuffalo/release
-	make tidy
-	release -y -f version.go --skip-packr
-	make tidy
-
-
-
+	shoulders -w

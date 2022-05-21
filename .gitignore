@@ -25,3 +25,4 @@ bin/*
 gin-bin
 .idea/
 .vscode
+shoulders.bin
