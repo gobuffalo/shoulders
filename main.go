@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -12,20 +13,27 @@ import (
 )
 
 var flags = struct {
-	Write bool
-	JSON  bool
-	Name  string
+	Write   bool
+	JSON    bool
+	Name    string
+	Version bool
 }{}
 
 func init() {
 	flag.StringVar(&flags.Name, "n", "", "name of the project")
 	flag.BoolVar(&flags.Write, "w", false, "write SHOULDERS.md to disk")
 	flag.BoolVar(&flags.JSON, "j", false, "print JSON of format of the dep list")
+	flag.BoolVar(&flags.Version, "v", false, "print version of shoulders")
 	flag.Parse()
 }
 
 func main() {
 	flag.Parse()
+
+	if flags.Version {
+		fmt.Printf("shoulders %s\n", Version)
+		return
+	}
 
 	view, err := shoulders.New()
 	if err != nil {
