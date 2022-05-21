@@ -5,7 +5,7 @@ Inspired by the [SHOULDERS.md](https://github.com/gobuffalo/buffalo/blob/master/
 ## Installation
 
 ```bash
-$ go get -u github.com/gobuffalo/shoulders
+$ go install github.com/gobuffalo/shoulders@latest
 ```
 
 ## Usage
@@ -14,19 +14,21 @@ When run without any flags the `shoulders` command will print the `SHOULDERS.md`
 
 ```bash
 $ shoulders
-```
-
-```markdown
 # github.com/gobuffalo/shoulders Stands on the Shoulders of Giants
 
-github.com/gobuffalo/shoulders does not try to reinvent the wheel! Instead, it uses the already great wheels developed by the Go community and puts them altogether in the best way possible. Without these giants, this project would not be possible. Please make sure to check them out and thank them for all of their hard work.
+github.com/gobuffalo/shoulders does not try to reinvent the wheel! Instead, it uses the already great wheels developed by the Go community and puts them all together in the best way possible. Without these giants, this project would not be possible. Please make sure to check them out and thank them for all of their hard work.
 
 Thank you to the following **GIANTS**:
 
-
-* [github.com/markbates/deplist](https://godoc.org/github.com/markbates/deplist)
-
-* [github.com/pkg/errors](https://godoc.org/github.com/pkg/errors)
+* [github.com/yuin/goldmark](https://godoc.org/github.com/yuin/goldmark)
+* [golang.org/x/crypto](https://godoc.org/golang.org/x/crypto)
+* [golang.org/x/mod](https://godoc.org/golang.org/x/mod)
+* [golang.org/x/net](https://godoc.org/golang.org/x/net)
+* [golang.org/x/sync](https://godoc.org/golang.org/x/sync)
+* [golang.org/x/sys](https://godoc.org/golang.org/x/sys)
+* [golang.org/x/text](https://godoc.org/golang.org/x/text)
+* [golang.org/x/tools](https://godoc.org/golang.org/x/tools)
+* [golang.org/x/xerrors](https://godoc.org/golang.org/x/xerrors)
 ```
 
 ### The `-w` (Write) Flag
@@ -42,20 +44,12 @@ $ shoulders -w
 By default the "name" of the project is the current package name. To change that use the `-n` flag.
 
 ```bash
-$ shoulders -n Buffalo
-```
+$ shoulders -n shoulders
+# shoulders Stands on the Shoulders of Giants
 
-```markdown
-# Buffalo Stands on the Shoulders of Giants
+shoulder does not try to reinvent the wheel! Instead, it uses the already great wheels developed by the Go community and puts them all together in the best way possible. Without these giants, this project would not be possible. Please make sure to check them out and thank them for all of their hard work.
 
-Buffalo does not try to reinvent the wheel! Instead, it uses the already great wheels developed by the Go community and puts them altogether in the best way possible. Without these giants, this project would not be possible. Please make sure to check them out and thank them for all of their hard work.
-
-Thank you to the following **GIANTS**:
-
-
-* [github.com/markbates/deplist](https://godoc.org/github.com/markbates/deplist)
-
-* [github.com/pkg/errors](https://godoc.org/github.com/pkg/errors)
+<...>
 ```
 
 ### The `-j` (JSON) Flag
@@ -64,8 +58,6 @@ To get a JSON array of the dependencies of the project use the `-j` flag.
 
 ```bash
 $ shoulders -j
+["github.com/yuin/goldmark","golang.org/x/crypto","golang.org/x/mod","golang.org/x/net","golang.org/x/sync","golang.org/x/sys","golang.org/x/text","golang.org/x/tools","golang.org/x/xerrors"]
 ```
 
-```json
-["github.com/markbates/deplist","github.com/pkg/errors"]
-```
